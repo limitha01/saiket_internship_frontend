@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Simple Quiz App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .quiz-container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 400px;
+    }
+
+    .question {
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+
+    .options label {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    button {
+      background-color: #3498db;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+
+    .result {
+      font-weight: bold;
+      font-size: 20px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="quiz-container">
+    <div class="question" id="question">Question text</div>
+    <div class="options" id="options"></div>
+    <button onclick="nextQuestion()">Next</button>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        question: "What does HTML stand for?",
+        options: ["HyperText Markup Language", "Home Tool Markup Language", "Hyperlinks and Text Markup Language"],
+        correct: 0
+      },
+      {
+        question: "Which CSS property changes text color?",
+        options: ["background-color", "font-style", "color"],
+        correct: 2
+      },
+      {
+        question: "Which language is used to add interactivity to a webpage?",
+        options: ["HTML", "JavaScript", "CSS"],
+        correct: 1
+      }
+    ];
+
+    let current = 0;
+    let score = 0;
+
+    function loadQuestion() {
+      const q = quizData[current];
+      document.getElementById('question').innerText = q.question;
+
+      const optionsDiv = document.getElementById('options');
+      optionsDiv.innerHTML = '';
+
+      q.options.forEach((option, index) => {
+        const radioHTML = `
+          <label>
+            <input type="radio" name="answer" value="${index}" />
+            ${option}
+          </label>`;
+        optionsDiv.innerHTML += radioHTML;
+      });
+    }
+
+    function nextQuestion() {
+      const answer = document.querySelector('input[name="answer"]:checked');
+      if (!answer) {
+        alert("Please select an answer!");
+        return;
+      }
+
+      const selected = parseInt(answer.value);
+      if (selected === quizData[current].correct) {
+        score++;
+      }
+
+      current++;
+      if (current < quizData.length) {
+        loadQuestion();
+      } else {
+        document.querySelector('.quiz-container').innerHTML = `
+          <h2>Quiz Completed!</h2>
+          <p class="result">Your Score: ${score} / ${quizData.length}</p>
+        `;
+      }
+    }
+
+    // Load first question
+    loadQuestion();
+  </script>
+
+</body>
+</html>
